@@ -54,9 +54,18 @@ export const EventSubmissionForm: React.FC<EventSubmissionFormProps> = ({
   });
 
   const handleSubmit = (values: FormValues) => {
+    // Create a new event with all required properties and ensure none are optional
     const newEvent: Event = {
       id: Date.now().toString(),
-      ...values,
+      name: values.name,
+      description: values.description,
+      date: values.date,
+      time: values.time,
+      location: values.location,
+      college: values.college,
+      type: values.type,
+      link: values.link,
+      imageUrl: values.imageUrl || undefined // Handle optional imageUrl
     };
     
     onSubmit(newEvent);
