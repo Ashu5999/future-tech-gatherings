@@ -54,7 +54,7 @@ export const EventSubmissionForm: React.FC<EventSubmissionFormProps> = ({
   });
 
   const handleSubmit = (values: FormValues) => {
-    // Create a new event with all required properties and ensure none are optional
+    // Create a new event with all required properties explicitly assigned
     const newEvent: Event = {
       id: Date.now().toString(),
       name: values.name,
