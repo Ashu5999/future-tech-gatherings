@@ -1,15 +1,20 @@
 
 import { useState } from "react";
-import { EventCard } from "../components/EventCard";
 import { EventDetails } from "../components/EventDetails";
 import { EventFilters } from "../components/EventFilters";
 import { EventSubmissionForm } from "../components/EventSubmissionForm";
+import { EventTabs } from "../components/EventTabs";
 import { Event, events as initialEvents } from "../data/eventsMockData";
-import { filterEvents } from "../utils/eventUtils";
 
 const Index = () => {
   const [events, setEvents] = useState<Event[]>(initialEvents);
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>(events);
+  const [filters, setFilters] = useState<{
+    searchQuery?: string;
+    eventType?: string;
+    college?: string;
+    startDate?: string;
+    endDate?: string;
+  }>({});
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -20,7 +25,7 @@ const Index = () => {
     startDate?: string;
     endDate?: string;
   }) => {
-    setFilteredEvents(filterEvents(events, filters));
+    setFilters(filters);
   };
 
   const handleEventClick = (event: Event) => {
@@ -31,7 +36,6 @@ const Index = () => {
   const handleEventSubmit = (newEvent: Event) => {
     const updatedEvents = [newEvent, ...events];
     setEvents(updatedEvents);
-    setFilteredEvents(updatedEvents);
   };
 
   return (
@@ -55,24 +59,7 @@ const Index = () => {
           <EventFilters events={events} onFilterChange={handleFilterChange} />
         </div>
 
-        {filteredEvents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onClick={handleEventClick}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <h3 className="text-xl font-medium mb-2">No events found</h3>
-            <p className="text-muted-foreground">
-              Try adjusting your filters or add a new event.
-            </p>
-          </div>
-        )}
+        <EventTabs events={events} onClick={handleEventClick} filters={filters} />
       </div>
 
       <EventDetails
